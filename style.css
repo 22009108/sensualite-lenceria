@@ -1,0 +1,164 @@
+/* =========================================
+   1. VARIABLES Y CONFIGURACIÓN BASE
+   ========================================= */
+:root {
+    --primary-gradient: linear-gradient(180deg, #240c0c 0%, #290202 100%);
+    --bg-white: #ffffff;
+    --card-bg: #f8f8f8;
+    --text-dark: #3b0606;
+    --accent-purple: #831616;
+    --gray-light: #eee;
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f0f0; /* Fondo gris para resaltar el contenedor */
+    display: flex;
+    justify-content: center;
+}
+
+/* Contenedor Principal (Fluido) */
+.mobile-container {
+    width: 100%;
+    max-width: 1200px; /* Ancho máximo en PC */
+    background-color: var(--bg-white);
+    min-height: 100vh;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   2. ENCABEZADO (HEADER)
+   ========================================= */
+.main-header {
+    background: var(--primary-gradient);
+    padding: 40px 20px;
+    color: white;
+    text-align: center;
+    /* Curva elegante en la parte inferior */
+    border-radius: 0 0 50% 50% / 0 0 15% 15%;
+}
+
+.logo-img {
+    width: 30%;
+    max-width: 90px;
+    height: auto;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin: 0;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.brand-text p {
+    font-size: 0.8rem;
+    margin: 5px 0 0 0;
+    opacity: 0.9;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   3. CUERPO Y SECCIÓN DE TÍTULO
+   ========================================= */
+.content {
+    padding: 20px 0;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    color: var(--text-dark);
+    margin: 30px 0;
+    font-size: 1.6rem;
+}
+
+/* =========================================
+   4. GRILLA DE PRODUCTOS (RESPONSIVA)
+   ========================================= */
+.product-grid {
+    display: flex;
+    gap: 16px;
+    padding: 0 32px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-left: 32px;
+    scroll-padding-right: 32px;
+}
+
+.product-card {
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    color: #3b0606;
+    flex: 0 0 180px;
+    scroll-snap-align: start;
+}
+
+.product-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.product-grid::-webkit-scrollbar-thumb {
+    background: rgba(59, 6, 6, 0.35);
+    border-radius: 999px;
+}
+
+.product-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 999px;
+}
+
+.image-wrapper {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1; /* Cuadrado perfecto siempre */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.product-info h3 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 12px 0 8px 0;
+    color: inherit;
+    text-transform: uppercase;
+    min-height: 40px; /* Alineación de títulos */
+}
+
+.price {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1rem;
+    color: inherit;
+}
+
+.product-price,
+.btn-outline {
+    color: inherit;
+}
