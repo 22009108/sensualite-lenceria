@@ -39,39 +39,97 @@ body {
    ========================================= */
 .main-header {
     background: var(--primary-gradient);
-    padding: 40px 20px;
+    padding: 18px 20px;
     color: white;
-    text-align: center;
-    /* Curva elegante en la parte inferior */
-    border-radius: 0 0 50% 50% / 0 0 15% 15%;
+    border-radius: 0 0 28px 28px;
 }
 
 .logo-img {
-    width: 30%;
-    max-width: 90px;
+    width: 58px;
+    max-width: 58px;
     height: auto;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.25);
 }
 
-.logo-container {
+.top-nav {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 16px;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
 }
 
 .brand-text h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
+    font-size: 1.3rem;
     margin: 0;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-transform: uppercase;
 }
 
 .brand-text p {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     margin: 5px 0 0 0;
     opacity: 0.9;
-    letter-spacing: 1px;
+    letter-spacing: 0.4px;
+}
+
+.contact-menu {
+    position: relative;
+    margin-left: auto;
+}
+
+.contact-toggle {
+    background: #ffffff;
+    color: var(--text-dark);
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.contact-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.contact-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 170px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    display: none;
+    z-index: 20;
+}
+
+.contact-dropdown.open {
+    display: block;
+}
+
+.contact-dropdown a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 10px;
+}
+
+.contact-dropdown a:hover {
+    background: rgba(131, 22, 22, 0.08);
 }
 
 /* =========================================
@@ -111,6 +169,11 @@ body {
     color: #3b0606;
     flex: 0 0 180px;
     scroll-snap-align: start;
+    cursor: pointer;
+}
+
+.product-card:hover .image-wrapper img {
+    transform: scale(1.03);
 }
 
 .product-grid::-webkit-scrollbar {
@@ -161,4 +224,78 @@ body {
 .product-price,
 .btn-outline {
     color: inherit;
+}
+
+/* =========================================
+   5. BANNER DE PRODUCTO
+   ========================================= */
+.product-banner {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 80;
+}
+
+.product-banner.open {
+    display: flex;
+}
+
+.banner-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.banner-content {
+    position: relative;
+    width: min(460px, 100%);
+    background: #fff;
+    border-radius: 22px;
+    padding: 18px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.banner-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 0;
+    background: rgba(0, 0, 0, 0.08);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.banner-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 14px;
+}
+
+.banner-title {
+    margin: 0;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+}
+
+.banner-description {
+    margin: 10px 0;
+    color: #5a2424;
+    line-height: 1.45;
+    font-size: 0.95rem;
+}
+
+.banner-price {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #6d0b0b;
 }
