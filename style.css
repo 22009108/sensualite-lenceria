@@ -214,6 +214,34 @@ body {
     min-height: 40px; /* Alineación de títulos */
 }
 
+.size-selector {
+    display: flex;
+    gap: 6px;
+    margin: 2px 0 8px;
+}
+
+.size-option {
+    border: 1px solid rgba(59, 6, 6, 0.35);
+    background: #fff;
+    color: #3b0606;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.size-option:hover {
+    transform: translateY(-1px);
+}
+
+.size-option.active {
+    background: #3b0606;
+    border-color: #3b0606;
+    color: #fff;
+}
+
 .price {
     display: inline-block;
     font-weight: 700;
@@ -291,6 +319,23 @@ body {
     color: #5a2424;
     line-height: 1.45;
     font-size: 0.95rem;
+}
+
+.banner-size-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 12px;
+}
+
+.banner-size-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #5a2424;
+}
+
+.size-selector-modal {
+    margin: 0;
 }
 
 .banner-price {
