@@ -328,6 +328,10 @@ body {
     margin: 6px 0 12px;
 }
 
+.banner-size-selector[hidden] {
+    display: none !important;
+}
+
 .banner-size-label {
     font-size: 0.9rem;
     font-weight: 600;

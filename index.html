@@ -196,7 +196,7 @@
 
                 <div class="product-card" data-description="Formato mini con vibración intensa y materiales suaves.">
                     <div class="image-wrapper">
-                        <img src="BALAS/bala 6.jpeg" alt="Bala Vibradora 8">
+                        <img src="BALAS/Bala 6.jpeg" alt="Bala Vibradora 8">
                     </div>
                     <div class="product-info">
                         <h3>balita lilo</h3>
@@ -441,23 +441,23 @@
                         <img src="PLUGS/Plug pico rosa.jpeg" alt="Plug 2">
                     </div>
                     <div class="product-info">
-                        <h3>Plug de silicon/h3>
+                        <h3>Plug de silicon</h3>
                         <span class="price">$130.00 MXN</span>
                     </div>
                 </div>
 
-                <div class="product-card" data-description="Plug con acabado elegante y cómodo para uso prolongado." data-size-pricing="true" data-selected-size="C">
+                <div class="product-card" data-banner-size="true" data-description="Plug con acabado elegante y cómodo para uso prolongado." data-size-pricing="true" data-selected-size="C" data-price-c="$150.00 MXN" data-price-m="$180.00 MXN" data-price-g="$200.00 MXN">
                     <div class="image-wrapper">
                         <img src="PLUGS/Plugs tamaños.jpeg" alt="Plug 3">
                     </div>
                     <div class="product-info">
                         <h3>Plug metalico</h3>
-                        <div class="size-selector" aria-label="Selecciona tamano para Plug metalico">
+                        <div class="size-selector" aria-label="Selecciona talla para Plug metalico">
                             <button class="size-option active" type="button" data-size="C" data-price="$150.00 MXN" aria-pressed="true">C</button>
                             <button class="size-option" type="button" data-size="M" data-price="$180.00 MXN" aria-pressed="false">M</button>
                             <button class="size-option" type="button" data-size="G" data-price="$200.00 MXN" aria-pressed="false">G</button>
                         </div>
-                        <span class="price">$280.00 MXN</span>
+                        <span class="price">$150.00 MXN</span>
                     </div>
                 </div>
 
@@ -612,7 +612,7 @@
                         <img src="DILDOS/Dildo arnes 1.jpeg" alt="Dildo 10">
                     </div>
                     <div class="product-info">
-                        <h3>Dilldo arnes doble/h3>
+                        <h3>Dilldo arnes doble</h3>
                         <span class="price">$495.00 MXN</span>
                     </div>
                 </div>
@@ -966,7 +966,12 @@
             }
         });
 
-        const sizePricingCards = document.querySelectorAll('.product-card[data-size-pricing="true"]');
+        const sizePricingCards = document.querySelectorAll('.product-card[data-banner-size="true"]');
+
+        const getCardSizePrice = (card, size) => {
+            const normalizedSize = String(size || '').toUpperCase();
+            return card.dataset[`price${normalizedSize}`] || card.dataset.price;
+        };
 
         const setCardSelectedSize = (card, selectedSize) => {
             const sizeButtons = card.querySelectorAll('.size-option');
@@ -988,12 +993,30 @@
                 selectedButton.setAttribute('aria-pressed', 'true');
             }
 
+            if (!selectedButton && sizeButtons.length === 0) {
+                const size = String(selectedSize || card.dataset.selectedSize || 'C').toUpperCase();
+                const price = getCardSizePrice(card, size);
+
+                card.dataset.selectedSize = size;
+
+                if (priceElement && price) {
+                    priceElement.textContent = price;
+                }
+
+                return {
+                    dataset: {
+                        size,
+                        price,
+                    },
+                };
+            }
+
             if (!selectedButton) {
                 return null;
             }
 
             const size = selectedButton.dataset.size;
-            const price = selectedButton.dataset.price;
+            const price = selectedButton.dataset.price || getCardSizePrice(card, size);
             card.dataset.selectedSize = size;
 
             if (priceElement && price) {
@@ -1011,19 +1034,29 @@
             });
         };
 
+        const clearBannerSizeState = () => {
+            bannerSizeSelector.hidden = true;
+            setBannerSelectedSize('');
+        };
+
         sizePricingCards.forEach((card) => {
             const sizeButtons = card.querySelectorAll('.size-option');
-            const defaultSelected = card.querySelector('.size-option.active') || sizeButtons[0];
-            if (defaultSelected) {
-                setCardSelectedSize(card, defaultSelected.dataset.size);
-            }
+            const defaultSelected = card.querySelector('.size-option.active') || sizeButtons[0] || card.dataset.selectedSize || 'C';
 
-            sizeButtons.forEach((button) => {
-                button.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    setCardSelectedSize(card, button.dataset.size);
+            if (sizeButtons.length > 0) {
+                if (defaultSelected) {
+                    setCardSelectedSize(card, defaultSelected.dataset.size);
+                }
+
+                sizeButtons.forEach((button) => {
+                    button.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        setCardSelectedSize(card, button.dataset.size);
+                    });
                 });
-            });
+            } else {
+                setCardSelectedSize(card, typeof defaultSelected === 'string' ? defaultSelected : defaultSelected?.dataset?.size);
+            }
         });
 
         bannerSizeOptions.forEach((button) => {
@@ -1039,7 +1072,7 @@
                 setBannerSelectedSize(selectedSize);
 
                 const updatedPrice = activeBannerCard.querySelector('.price')?.textContent?.trim() || 'Precio no disponible';
-                bannerPrice.textContent = `${updatedPrice} - Talla ${selectedSize}`;
+                bannerPrice.textContent = updatedPrice;
             });
         });
 
@@ -1050,7 +1083,7 @@
             const price = card.querySelector('.price')?.textContent?.trim() || 'Precio no disponible';
             const description = card.dataset.description || 'Producto disponible en nuestro catálogo.';
             const selectedSize = card.dataset.selectedSize;
-            const hasSizePricing = card.dataset.sizePricing === 'true';
+            const hasSizePricing = card.dataset.bannerSize === 'true';
 
             bannerImage.src = image?.src || '';
             bannerImage.alt = image?.alt || name;
@@ -1064,9 +1097,9 @@
 
                 bannerSizeSelector.hidden = false;
                 setBannerSelectedSize(currentSize);
-                bannerPrice.textContent = `${currentPrice} - Talla ${currentSize}`;
+                bannerPrice.textContent = currentPrice;
             } else {
-                bannerSizeSelector.hidden = true;
+                clearBannerSizeState();
                 bannerPrice.textContent = price;
             }
 
