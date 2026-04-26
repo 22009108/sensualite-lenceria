@@ -446,7 +446,7 @@
                     </div>
                 </div>
 
-                <div class="product-card" data-banner-size="true" data-description="Plug con acabado elegante y cómodo para uso prolongado." data-size-pricing="true" data-selected-size="C" data-price-c="$150.00 MXN" data-price-m="$180.00 MXN" data-price-g="$200.00 MXN">
+                <div class="product-card" data-banner-size="true" data-banner-size-force="true" data-description="Plug con acabado elegante y cómodo para uso prolongado." data-size-pricing="true" data-selected-size="C" data-price-c="$150.00 MXN" data-price-m="$180.00 MXN" data-price-g="$200.00 MXN">
                     <div class="image-wrapper">
                         <img src="PLUGS/Plugs tamaños.jpeg" alt="Plug 3">
                     </div>
@@ -1500,6 +1500,10 @@
         const shouldShowBannerSizeSelector = (card) => {
             if (card.dataset.bannerSize !== 'true') {
                 return false;
+            }
+
+            if (card.dataset.bannerSizeForce === 'true') {
+                return true;
             }
 
             const grid = card.closest('.product-grid');
