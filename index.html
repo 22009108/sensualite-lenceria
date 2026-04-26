@@ -875,7 +875,7 @@
 
             <div class="product-grid">
 
-                <div class="product-card" data-banner-size="true" data-description="Tanga con encaje y acabado delicado para uso cómodo." data-size-pricing="true" data-selected-size="C" data-price-m=$90.00 MXN" data-price-g="$900.00 MXN">
+                <div class="product-card" data-banner-size="true" data-description="Tanga con encaje y acabado delicado para uso cómodo." data-size-pricing="true" data-selected-size="C" data-price-m="$90.00 MXN" data-price-g="$900.00 MXN">
                     <div class="image-wrapper">
                         <img src="TANGAS/Tanga piedras roja.jpeg" alt="Tanga Perlas">
                     </div>
@@ -1413,7 +1413,7 @@
                 <button class="banner-close" id="bannerClose" type="button" aria-label="Cerrar detalle del producto">×</button>
                 <img src="" alt="Imagen del producto" class="banner-image" id="bannerImage">
                 <h3 class="banner-title" id="bannerTitle"></h3>
-                <p class="banner-description" id="bannerDescription"></p>
+                <!-- <p class="banner-description" id="bannerDescription"></p> -->
                 <div class="banner-size-selector" id="bannerSizeSelector" hidden>
                     <span class="banner-size-label">Talla:</span>
                     <div class="size-selector size-selector-modal" aria-label="Selecciona talla en detalle de producto">
@@ -1434,7 +1434,7 @@
         const productBanner = document.getElementById('productBanner');
         const bannerImage = document.getElementById('bannerImage');
         const bannerTitle = document.getElementById('bannerTitle');
-        const bannerDescription = document.getElementById('bannerDescription');
+        // const bannerDescription = document.getElementById('bannerDescription');
         const bannerPrice = document.getElementById('bannerPrice');
         const bannerSizeSelector = document.getElementById('bannerSizeSelector');
         const bannerSizeOptions = bannerSizeSelector.querySelectorAll('.size-option');
@@ -1458,6 +1458,15 @@
         const sizePricingCards = document.querySelectorAll('.product-card[data-banner-size="true"]');
 
         const getBannerSizeOptions = (card) => {
+            const cardButtons = card.querySelectorAll('.size-selector .size-option');
+            if (cardButtons.length > 0) {
+                return Array.from(cardButtons).map((button) => ({
+                    size: button.dataset.size,
+                    price: button.dataset.price || getCardSizePrice(card, button.dataset.size),
+                    label: button.textContent.trim() || button.dataset.size,
+                }));
+            }
+
             const options = [];
             const sizeMap = {
                 'pricec': 'C',
@@ -1473,7 +1482,8 @@
                     if (sizeMap[sizeKey]) {
                         options.push({
                             size: sizeMap[sizeKey],
-                            price: value
+                            price: value,
+                            label: sizeMap[sizeKey],
                         });
                     }
                 }
@@ -1485,6 +1495,16 @@
         const getCardSizePrice = (card, size) => {
             const normalizedSize = String(size || '').toUpperCase();
             return card.dataset[`price${normalizedSize}`] || card.dataset.price;
+        };
+
+        const shouldShowBannerSizeSelector = (card) => {
+            if (card.dataset.bannerSize !== 'true') {
+                return false;
+            }
+
+            const grid = card.closest('.product-grid');
+            const sectionTitle = grid?.previousElementSibling?.textContent?.trim()?.toUpperCase();
+            return sectionTitle === 'TANGAS' || sectionTitle === 'CONJUNTOS';
         };
 
         const setCardSelectedSize = (card, selectedSize) => {
@@ -1568,7 +1588,7 @@
                 item.hidden = false;
                 item.dataset.size = option.size;
                 item.dataset.price = option.price;
-                item.textContent = option.size;
+                item.textContent = option.label || option.size;
             });
         };
 
@@ -1621,12 +1641,12 @@
             const price = card.querySelector('.price')?.textContent?.trim() || 'Precio no disponible';
             const description = card.dataset.description || 'Producto disponible en nuestro catálogo.';
             const selectedSize = card.dataset.selectedSize;
-            const hasSizePricing = card.dataset.bannerSize === 'true';
+            const hasSizePricing = shouldShowBannerSizeSelector(card);
 
             bannerImage.src = image?.src || '';
             bannerImage.alt = image?.alt || name;
             bannerTitle.textContent = name;
-            bannerDescription.textContent = description;
+            // bannerDescription.textContent = description;
 
             if (hasSizePricing) {
                 const bannerOptions = getBannerSizeOptions(card);
