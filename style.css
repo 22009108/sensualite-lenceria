@@ -42,6 +42,9 @@ body {
     padding: 18px 20px;
     color: white;
     border-radius: 0 0 28px 28px;
+    position: sticky;
+    top: 0;
+    z-index: 60;
 }
 
 .logo-img {
@@ -64,6 +67,8 @@ body {
     align-items: center;
     gap: 12px;
     flex: 1;
+    text-decoration: none;
+    color: inherit;
 }
 
 .brand-text h1 {
