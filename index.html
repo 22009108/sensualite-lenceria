@@ -588,9 +588,10 @@
                     </div>
                 </div>
 
-                <div class="product-card" data-description="Dildo de silicon flexible curvo, Doble cabeza, Mide 30 cm">
+                <div class="product-card out-of-stock" data-description="Dildo de silicon flexible curvo, Doble cabeza, Mide 30 cm">
                     <div class="image-wrapper">
                         <img src="DILDOS/Dildo noble.jpeg" alt="Dildo 8">
+                        <div class="out-of-stock-badge">AGOTADO</div>
                     </div>
                     <div class="product-info">
                         <h3>Dildo doble curvo</h3>
@@ -684,9 +685,10 @@
                     </div>
                 </div>
 
-                <div class="product-card" data-description="">
+                <div class="product-card out-of-stock" data-description="">
                     <div class="image-wrapper">
                         <img src="ACCESORIOS/Ducha de baño.jpeg" alt="Accesorio 7">
+                        <div class="out-of-stock-badge">AGOTADO</div>
                     </div>
                     <div class="product-info">
                         <h3>Enema</h3>
@@ -1500,6 +1502,11 @@
             return card.dataset[`price${normalizedSize}`] || card.dataset.price;
         };
 
+        const getCardSectionTitle = (card) => {
+            const grid = card.closest('.product-grid');
+            return grid?.previousElementSibling?.textContent?.trim()?.toUpperCase() || '';
+        };
+
         const shouldShowBannerSizeSelector = (card) => {
             if (card.dataset.bannerSize !== 'true') {
                 return false;
@@ -1509,8 +1516,7 @@
                 return true;
             }
 
-            const grid = card.closest('.product-grid');
-            const sectionTitle = grid?.previousElementSibling?.textContent?.trim()?.toUpperCase();
+            const sectionTitle = getCardSectionTitle(card);
             return sectionTitle === 'TANGAS' || sectionTitle === 'CONJUNTOS';
         };
 
@@ -1564,7 +1570,21 @@
             card.dataset.selectedSize = size;
 
             if (priceElement && price) {
-                priceElement.textContent = price;
+                const sectionTitle = getCardSectionTitle(card);
+
+                // Aplicar descuento si NO es TANGAS ni CONJUNTOS
+                if (!sectionTitle.includes('TANGAS') && !sectionTitle.includes('CONJUNTOS')) {
+                    const priceMatch = price.match(/\$\s?([\d,]+\.?\d*)/);
+                    if (priceMatch) {
+                        const originalPrice = parseFloat(priceMatch[1].replace(/,/g, ''));
+                        const discountedPrice = (originalPrice * 0.9).toFixed(2);
+                        priceElement.innerHTML = `<span class="original-price">$${originalPrice.toFixed(2)} MXN</span><br><span class="discounted-price">$${discountedPrice} MXN</span>`;
+                    } else {
+                        priceElement.textContent = price;
+                    }
+                } else {
+                    priceElement.textContent = price;
+                }
             }
 
             return selectedButton;
@@ -1636,8 +1656,9 @@
                 setCardSelectedSize(activeBannerCard, selectedSize);
                 setBannerSelectedSize(selectedSize);
 
-                const updatedPrice = activeBannerCard.querySelector('.price')?.textContent?.trim() || 'Precio no disponible';
-                bannerPrice.textContent = updatedPrice;
+                const updatedPriceElement = activeBannerCard.querySelector('.price');
+                const updatedPrice = updatedPriceElement?.innerHTML?.trim() || 'Precio no disponible';
+                bannerPrice.innerHTML = updatedPrice;
             });
         });
 
@@ -1660,14 +1681,17 @@
                 updateBannerSizeButtons(bannerOptions);
                 const currentSelected = setCardSelectedSize(card, selectedSize || bannerOptions[0]?.size || 'C');
                 const currentSize = currentSelected?.dataset.size || bannerOptions[0]?.size || 'C';
-                const currentPrice = card.querySelector('.price')?.textContent?.trim() || price;
+                const currentPriceElement = card.querySelector('.price');
+                const currentPrice = currentPriceElement?.innerHTML?.trim() || price;
 
                 bannerSizeSelector.hidden = false;
                 setBannerSelectedSize(currentSize);
-                bannerPrice.textContent = currentPrice;
+                bannerPrice.innerHTML = currentPrice;
             } else {
                 clearBannerSizeState();
-                bannerPrice.textContent = price;
+                const priceElement = card.querySelector('.price');
+                const displayPrice = priceElement?.innerHTML?.trim() || price;
+                bannerPrice.innerHTML = displayPrice;
             }
 
             productBanner.classList.add('open');
@@ -1689,6 +1713,48 @@
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 closeProductBanner();
+            }
+        });
+
+        // Aplicar descuento del 10% a todos los productos excepto TANGAS y CONJUNTOS
+        const sections = document.querySelectorAll('.section-title');
+        let tangasIndex = -1;
+        let conjuntosIndex = -1;
+
+        sections.forEach((title, index) => {
+            if (title.textContent.includes('TANGAS')) tangasIndex = index;
+            if (title.textContent.includes('CONJUNTOS')) conjuntosIndex = index;
+        });
+
+        const allProductCards = document.querySelectorAll('.product-card');
+        allProductCards.forEach((card) => {
+            const sectionTitle = getCardSectionTitle(card);
+
+            // Aplicar descuento si NO es TANGAS ni CONJUNTOS
+            if (!sectionTitle.includes('TANGAS') && !sectionTitle.includes('CONJUNTOS')) {
+                // Agregar badge de descuento
+                const imageWrapper = card.querySelector('.image-wrapper');
+                if (imageWrapper && !imageWrapper.querySelector('.discount-badge')) {
+                    const discountBadge = document.createElement('div');
+                    discountBadge.className = 'discount-badge';
+                    discountBadge.textContent = '-10%';
+                    imageWrapper.appendChild(discountBadge);
+                }
+
+                // Mostrar precio con descuento
+                const priceSpan = card.querySelector('.price');
+                if (priceSpan) {
+                    const priceText = priceSpan.textContent.trim();
+                    const priceMatch = priceText.match(/\$\s?([\d,]+\.?\d*)/);
+                    if (priceMatch) {
+                        const originalPrice = parseFloat(priceMatch[1].replace(/,/g, ''));
+                        const discountedPrice = (originalPrice * 0.9).toFixed(2);
+                        const currencyPart = priceText.match(/MXN/);
+                        if (!priceSpan.querySelector('.original-price')) {
+                            priceSpan.innerHTML = `<span class="original-price">$${originalPrice.toFixed(2)} MXN</span><br><span class="discounted-price">$${discountedPrice} MXN</span>`;
+                        }
+                    }
+                }
             }
         });
     </script>
