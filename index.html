@@ -1566,9 +1566,18 @@
                 return;
             }
 
-            const isTangasOrConjuntos = sectionTitle.includes('TANGAS') || sectionTitle.includes('CONJUNTOS');
+            const isTangas = sectionTitle.includes('TANGAS');
+            const isConjuntos = sectionTitle.includes('CONJUNTOS');
 
-            if (isTangasOrConjuntos) {
+            // Los CONJUNTOS ya no tendrán promoción: mostrar siempre precio base
+            if (isConjuntos) {
+                priceElement.textContent = `$${basePrice.toFixed(2)} MXN`;
+                setCardDiscountBadge(card, null);
+                return;
+            }
+
+            // Mantener la lógica de descuento para TANGAS (si aplica)
+            if (isTangas) {
                 if (basePrice === 135) {
                     priceElement.innerHTML = formatDiscountPrice(135, 99);
                     setCardDiscountBadge(card, '-26%');
