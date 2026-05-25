@@ -1523,7 +1523,7 @@
         };
 
         const formatDiscountPrice = (originalPrice, discountedPrice) => {
-            return `<span class="original-price">$${originalPrice.toFixed(2)} MXN</span><br><span class="discounted-price">$${discountedPrice.toFixed(2)} MXN</span>`;
+            return `$${originalPrice.toFixed(2)} MXN`;
         };
 
         const setCardDiscountBadge = (card, badgeText) => {
@@ -1533,22 +1533,10 @@
             }
 
             const currentBadge = imageWrapper.querySelector('.discount-badge');
-            if (!badgeText) {
-                if (currentBadge) {
-                    currentBadge.remove();
-                }
-                return;
-            }
-
             if (currentBadge) {
-                currentBadge.textContent = badgeText;
-                return;
+                currentBadge.remove();
             }
-
-            const discountBadge = document.createElement('div');
-            discountBadge.className = 'discount-badge';
-            discountBadge.textContent = badgeText;
-            imageWrapper.appendChild(discountBadge);
+            // No se añaden nuevas insignias — todas las ofertas están deshabilitadas
         };
 
         const applyCardPricingRules = (card, basePriceText) => {
@@ -1557,7 +1545,6 @@
                 return;
             }
 
-            const sectionTitle = getCardSectionTitle(card);
             const basePrice = getNumericPrice(basePriceText);
 
             if (basePrice === null) {
@@ -1566,31 +1553,9 @@
                 return;
             }
 
-            const isTangas = sectionTitle.includes('TANGAS');
-            const isConjuntos = sectionTitle.includes('CONJUNTOS');
-
-            // Los CONJUNTOS ya no tendrán promoción: mostrar siempre precio base
-            if (isConjuntos) {
-                priceElement.textContent = `$${basePrice.toFixed(2)} MXN`;
-                setCardDiscountBadge(card, null);
-                return;
-            }
-
-            // Mantener la lógica de descuento para TANGAS (si aplica)
-            if (isTangas) {
-                if (basePrice === 135) {
-                    priceElement.innerHTML = formatDiscountPrice(135, 99);
-                    setCardDiscountBadge(card, '-26%');
-                } else {
-                    priceElement.textContent = `$${basePrice.toFixed(2)} MXN`;
-                    setCardDiscountBadge(card, null);
-                }
-                return;
-            }
-
-            const discountedPrice = basePrice * 0.9;
-            priceElement.innerHTML = formatDiscountPrice(basePrice, discountedPrice);
-            setCardDiscountBadge(card, '-10%');
+            // Mostrar siempre el precio base y eliminar cualquier badge de descuento
+            priceElement.textContent = `$${basePrice.toFixed(2)} MXN`;
+            setCardDiscountBadge(card, null);
         };
 
         const getActiveCardPriceText = (card) => {
