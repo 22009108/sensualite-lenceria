@@ -1531,7 +1531,13 @@
             return `$${originalPrice.toFixed(2)} MXN`;
         };
 
-        const setCardDiscountBadge = (card, badgeText) => {
+        const shouldApplyDiscount = (card) => {
+            const sectionTitle = getCardSectionTitle(card);
+            const noDiscountSections = ['LUBRICANTES Y ACEITES', 'TANGAS', 'CONJUNTOS'];
+            return !noDiscountSections.includes(sectionTitle);
+        };
+
+        const setCardDiscountBadge = (card, originalPrice) => {
             const imageWrapper = card.querySelector('.image-wrapper');
             if (!imageWrapper) {
                 return;
@@ -1541,7 +1547,13 @@
             if (currentBadge) {
                 currentBadge.remove();
             }
-            // No se añaden nuevas insignias — todas las ofertas están deshabilitadas
+
+            if (originalPrice !== null && shouldApplyDiscount(card)) {
+                const badge = document.createElement('div');
+                badge.className = 'discount-badge';
+                badge.innerHTML = `-10%`;
+                imageWrapper.appendChild(badge);
+            }
         };
 
         const applyCardPricingRules = (card, basePriceText) => {
@@ -1558,9 +1570,14 @@
                 return;
             }
 
-            // Mostrar siempre el precio base y eliminar cualquier badge de descuento
-            priceElement.textContent = `$${basePrice.toFixed(2)} MXN`;
-            setCardDiscountBadge(card, null);
+            if (shouldApplyDiscount(card)) {
+                const discountedPrice = basePrice * 0.9;
+                priceElement.innerHTML = `<span class="original-price">$${basePrice.toFixed(2)} MXN</span><br><span class="discounted-price">$${discountedPrice.toFixed(2)} MXN</span>`;
+                setCardDiscountBadge(card, basePrice);
+            } else {
+                priceElement.textContent = `$${basePrice.toFixed(2)} MXN`;
+                setCardDiscountBadge(card, null);
+            }
         };
 
         const getActiveCardPriceText = (card) => {
@@ -1575,7 +1592,7 @@
                 return sizePrice;
             }
 
-            return card.querySelector('.price')?.textContent?.trim() || '';
+            return card.querySelector('.price')?.innerHTML?.trim() || '';
         };
 
         const shouldShowBannerSizeSelector = (card) => {
@@ -1723,7 +1740,8 @@
             activeBannerCard = card;
             const image = card.querySelector('img');
             const name = card.querySelector('h3')?.textContent?.trim() || 'Producto';
-            const price = card.querySelector('.price')?.textContent?.trim() || 'Precio no disponible';
+            const priceElement = card.querySelector('.price');
+            const price = priceElement?.textContent?.trim() || 'Precio no disponible';
             const description = card.dataset.description || 'Producto disponible en nuestro catálogo.';
             const selectedSize = card.dataset.selectedSize;
             const hasSizePricing = shouldShowBannerSizeSelector(card);
@@ -1746,8 +1764,8 @@
                 bannerPrice.innerHTML = currentPrice;
             } else {
                 clearBannerSizeState();
-                const priceElement = card.querySelector('.price');
-                const displayPrice = priceElement?.innerHTML?.trim() || price;
+                const currentPriceElement = card.querySelector('.price');
+                const displayPrice = currentPriceElement?.innerHTML?.trim() || price;
                 bannerPrice.innerHTML = displayPrice;
             }
 

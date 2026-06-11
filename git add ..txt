@@ -1,0 +1,3 @@
+git add .
+git commit -m "nombre el cual le prondre al nuevo push"
+git push origin main

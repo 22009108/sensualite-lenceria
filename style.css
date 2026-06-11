@@ -402,9 +402,15 @@ body {
     text-decoration: line-through;
     font-size: 0.85rem;
     color: #999;
+    display: block;
+    margin: 0;
 }
 
 .discounted-price {
-    color: #ff4444;
+    color: #831616;
     font-weight: 700;
+    font-size: 1.05rem;
+    display: block;
+    margin: 0;
+    margin-top: 0px;
 }
