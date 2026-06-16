@@ -1532,9 +1532,8 @@
         };
 
         const shouldApplyDiscount = (card) => {
-            const sectionTitle = getCardSectionTitle(card);
-            const noDiscountSections = ['LUBRICANTES Y ACEITES', 'TANGAS', 'CONJUNTOS'];
-            return !noDiscountSections.includes(sectionTitle);
+            // Promoción desactivada: nunca aplicar descuento
+            return false;
         };
 
         const setCardDiscountBadge = (card, originalPrice) => {
