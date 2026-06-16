@@ -157,6 +157,7 @@ body {
    ========================================= */
 .product-grid {
     display: flex;
+    flex-wrap: nowrap;
     gap: 16px;
     padding: 0 32px 12px;
     overflow-x: auto;
@@ -177,10 +178,6 @@ body {
     cursor: pointer;
 }
 
-.product-card:hover .image-wrapper img {
-    transform: scale(1.03);
-}
-
 .product-grid::-webkit-scrollbar {
     height: 8px;
 }
@@ -193,6 +190,10 @@ body {
 .product-grid::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.06);
     border-radius: 999px;
+}
+
+.product-card:hover .image-wrapper img {
+    transform: scale(1.03);
 }
 
 .image-wrapper {
