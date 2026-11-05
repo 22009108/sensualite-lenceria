@@ -1582,6 +1582,9 @@
                 <p class="banner-price" id="bannerPrice"></p>
             </article>
         </div>
+        <button class="scroll-to-top" id="scrollToTop" type="button" aria-label="Volver al inicio" title="Volver al inicio">
+            ↑
+        </button>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     </div>
@@ -1599,7 +1602,22 @@
         const bannerSizeOptions = bannerSizeSelector.querySelectorAll('.size-option');
         const bannerClose = document.getElementById('bannerClose');
         const bannerBackdrop = document.getElementById('bannerBackdrop');
+        const scrollToTop = document.getElementById('scrollToTop');
         let activeBannerCard = null;
+
+        const updateScrollToTopVisibility = () => {
+            scrollToTop.classList.toggle('visible', window.scrollY > 300);
+        };
+
+        scrollToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        window.addEventListener('scroll', updateScrollToTopVisibility, { passive: true });
+        updateScrollToTopVisibility();
 
         contactToggle.addEventListener('click', () => {
             const isOpen = contactDropdown.classList.toggle('open');
