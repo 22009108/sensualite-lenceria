@@ -144,6 +144,18 @@ body {
     padding: 20px 0;
 }
 
+.site-footer {
+    background: var(--primary-gradient);
+    color: #fff;
+    padding: 24px 20px;
+    text-align: center;
+}
+
+.site-footer p {
+    margin: 4px 0;
+    font-size: 0.85rem;
+}
+
 .section-title {
     font-family: 'Playfair Display', serif;
     text-align: center;
